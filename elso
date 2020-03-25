@@ -1,0 +1,63 @@
+write 'Location riport'.
+uline.
+
+data name(20) type c.
+data building(2) type c.
+data floor(4) type c.
+data room(3) type c.
+
+select * from zemployees403.
+  concatenate zemployees403-surname zemployees403-forename into name separated by ' '.
+  split zemployees403-location at '-' into building floor room.
+  write: name, 'Building: ', building+1(1), 'Floor: ', floor+2(2), 'Room: ', room+1(2).
+  write /.
+endselect.
+
+uline.
+
+
+write 'Phone number report'.
+uline.
+
+
+data phonenumber(12) type c.
+data location(12) type c.
+data abuilding(7) type c value '0652392'.
+data firstfloor(3) type c value '111'.
+data secondfloor(3) type c value '222'.
+
+select * from zemployees403.
+  concatenate zemployees403-surname zemployees403-forename into name separated by ' '.
+  location = zemployees403-location.
+  search location for 'A'.
+  if sy-subrc = 0.
+    search location for 'FL01'.
+    if sy-subrc = 0.
+      concatenate abuilding firstfloor location+9(2) into phonenumber.
+    else.
+      concatenate abuilding secondfloor location+9(2) into phonenumber.
+    endif.
+  endif.
+  write: name, 'Phone: ', phonenumber.
+  write /.
+endselect.
+
+uline.
+
+
+
+write 'Entry code report'.
+uline.
+
+data code(4) type c.
+
+
+select * from zemployees403.
+  concatenate zemployees403-surname zemployees403-forename into name separated by ' '.
+  concatenate zemployees403-employee+7(1) zemployees403-location+8(3) into code.
+  write: name, 'Entrycode: ', code.
+  write /.
+
+endselect.
+
+uline.
